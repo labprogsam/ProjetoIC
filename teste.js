@@ -8,10 +8,7 @@ exports.solve = function(fileName) {
 //-----------------------------------------------------------------------------------------------------------------------  
   function newArrayVariable (currentAssignment, indice) {
     
-    if(indice == 0 && currentAssignment[indice] == 1) {
-        return true
-    }
-    else if(currentAssignment[indice] == 0) {
+    if(currentAssignment[indice] == 0) {
         currentAssignment[indice] = 1
         return currentAssignment
     } else {
@@ -32,9 +29,9 @@ exports.solve = function(fileName) {
 
 function doSolve(clauses, assignment) {
     let isSat = false
-    var noSolver = false
+
     
-    while ((!isSat) && !assignment) {
+    while ((!isSat) && ) {
       // does this assignment satisfy the formula? If so, make isSat true. 
         for(i = 0; i < assignment.length; i++) {
             
@@ -43,6 +40,8 @@ function doSolve(clauses, assignment) {
       // if not, get the next assignment and try again. 
       assignment = nextAssignment(assignment)
     }
+
+    
     let result = {'isSat': isSat, satisfyingAssignment: null}
     if (isSat) {
       result.satisfyingAssignment = assignment
@@ -76,7 +75,7 @@ function readFiles () {
     var leitura = fs.readFileSync('hole1.cnf').toString()
     var linhas = [];
     var linhas = leitura.split('\r\n');
-
+    
 return linhas
 }
 //-----------------------------------------------------------------------------------------------------------------------
@@ -90,8 +89,10 @@ return linhas
 
     for(i = 0; i < text.length && verificador == false; i++ ) {
         arrayAux =  text[i].split(' ');
+
         for(j = 0; j < arrayAux.length && verificador == false; j++) {
             if(arrayAux[j] == "cnf") {
+                
                 verificador = true;
                 var qntVariaveis = arrayAux[j+1]
                 var qntClausulas = arrayAux[j+2]
@@ -101,8 +102,10 @@ return linhas
     //Apos sair do laço eu verifico se realmente a quantidade de cláusulas e de variáveis
     //é igual a quantidade de cláusulas e variáveis informada.
     if(qntClausulas == clauses.length && qntVariaveis == variables.length) {
+        
         return true
-    } else {
+
+    } else  {
         return false
     }
 }
@@ -131,27 +134,26 @@ function readClauses (text) {
     }
 
     //Apos sair do laço eu terei a linha a qual está está o 'cnf', e pegarei
-  //todos as linhas depois dessa.
-  contador = 0
+    //todos as linhas depois dessa.
+    contador = 0
   
-  for(i = 0; i < text.length - position; i++) {
-    arrayClauses[i] = text[position + i].split(' ')
+     for(i = 0; i < text.length - position; i++) { 
+         arrayClauses[i] = text[position + i].split(' ')
   
-    if(arrayClauses[i] != '') {
-    for(j = 0; j < arrayClauses[i].length; j++) {
+        if(arrayClauses[i] != '') {
+            for(j = 0; j < arrayClauses[i].length; j++) {
         
-        if(arrayClauses[i][j] != 0 && arrayClauses[i][j] != '') {
-            auxiliar[contador] = arrayClauses[i][j]
-            contador++
-        } 
-        else if(arrayClauses[i][j] == 0 && arrayClauses[i][j] != '')
-        { 
-            contador = 0
-        }
-    }
-    if(contador == 0) {
-        arrayClauses[i] = auxiliar
-        auxiliar = []
+                if(arrayClauses[i][j] != 0 && arrayClauses[i][j] != '') {
+                auxiliar[contador] = arrayClauses[i][j]
+                contador++
+                } 
+                     else if(arrayClauses[i][j] == 0 && arrayClauses[i][j] != '') { 
+                        contador = 0
+                    }
+                    }
+                    if(contador == 0) {
+                     arrayClauses[i] = auxiliar
+                     auxiliar = []
         } 
     }
     

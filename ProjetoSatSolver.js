@@ -6,39 +6,50 @@ exports.solve = function(fileName) {
   
 //------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
-  function nextAssignment (currentAssignment) {
-        
-    if(currentAssignment[] == 0) {
-        currentAssignment[] = 1
-    } else {
-        
-    }
+function newArrayVariable (currentAssignment, indice) {
     
-//------------------------------------------------------------------------------------------------------------------------
-//------------------------------------------------------------------------------------------------------------------------
-    function indice (currentAssignment) {
-        
-        return currentAssignment.length 
+    if(currentAssignment[indice] == 0) {
+        currentAssignment[indice] = 1
+        return currentAssignment
+    } else {
+        currentAssignment[indice] = 0
+        return currentAssignment[indice --]
     }
+    }
+//----------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
+   function nextAssignment (currentAssignment) {
+    
+    var resultado = newArrayVariable(currentAssignment, currentAssignment.length -1)
+   
+    return resultado
+   }
 //------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
-
 
 function doSolve(clauses, assignment) {
     let isSat = false
+
     
     while ((!isSat) && ) {
       // does this assignment satisfy the formula? If so, make isSat true. 
-        if() {
+        for(i = 0; i < clauses.length; i++) {
+            var positionVar = clauses.length[i]
+
+            if(positionVar < 0) {
+                positionVar = Math.abs(positionVar) - 1
+                if(assignment[positionVar] == false) {
+                    
+                }
+            }
 
         }
 
-      else {
-          assignment = nextAssignment(assignment, assignment.length -1)
-          return doSolve(clauses,assignment)
-      }
-      
+      // if not, get the next assignment and try again. 
+      assignment = nextAssignment(assignment)
     }
+
+    
     let result = {'isSat': isSat, satisfyingAssignment: null}
     if (isSat) {
       result.satisfyingAssignment = assignment
@@ -134,7 +145,7 @@ function readClauses (text) {
     for(j = 0; j < arrayClauses[i].length; j++) {
         
         if(arrayClauses[i][j] != 0 && arrayClauses[i][j] != '') {
-            auxiliar[contador] = arrayClauses[i][j]
+            auxiliar[contador] = arrayClauses[i][j] 
             contador++
         } 
         else if(arrayClauses[i][j] == 0 && arrayClauses[i][j] != '')
