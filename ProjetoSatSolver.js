@@ -4,19 +4,40 @@ exports.solve = function(fileName) {
     return result // two fields: isSat and satisfyingAssignment
   }
   
-  // Receives the current assignment and produces the next one
-  function nextAssignment(currentAssignment) {
-    // implement here the code to produce the next assignment based on currentAssignment. 
-    return newAssignment
-  }
-  
-  function doSolve(clauses, assignment) {
+//------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------
+  function nextAssignment (currentAssignment) {
+        
+    if(currentAssignment[] == 0) {
+        currentAssignment[] = 1
+    } else {
+        
+    }
+    
+//------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------
+    function indice (currentAssignment) {
+        
+        return currentAssignment.length 
+    }
+//------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------
+
+
+function doSolve(clauses, assignment) {
     let isSat = false
-    while ((!isSat)/* &&  must check whether this is the last assignment or not)*/ {
+    
+    while ((!isSat) && ) {
       // does this assignment satisfy the formula? If so, make isSat true. 
-  
-      // if not, get the next assignment and try again. 
-      assignment = nextAssignment(assignment)
+        if() {
+
+        }
+
+      else {
+          assignment = nextAssignment(assignment, assignment.length -1)
+          return doSolve(clauses,assignment)
+      }
+      
     }
     let result = {'isSat': isSat, satisfyingAssignment: null}
     if (isSat) {
@@ -24,17 +45,13 @@ exports.solve = function(fileName) {
     }
     return result
   }
-    
-  function readFormula(fileName) {
-    // To read the file, it is possible to use the 'fs' module. 
-    // Use function readFileSync and not readFile. 
-    // First read the lines of text of the file and only afterward use the auxiliary functions.
-    let text // = ...  //  an array containing lines of text extracted from the file. 
+//------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------
+   function readFormula(fileName) {
+    let text = readText()
     let clauses = readClauses(text)
     let variables = readVariables(clauses)
     
-    // In the following line, text is passed as an argument so that the function
-    // is able to extract the problem specification.
     let specOk = checkProblemSpecification(text, clauses, variables)
   
     let result = { 'clauses': [], 'variables': [] }
@@ -44,13 +61,25 @@ exports.solve = function(fileName) {
     }
     return result
   }
-  //-----------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------
+
+function readText () {
+    var fs = require('fs');
+    var leitura = fs.readFileSync('hole1.cnf').toString()
+    var linhas = [];
+    var linhas = leitura.split('\r\n');
+
+return linhas
+}
+//-----------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------
   function checkProblemSpecification (text,clauses,variables) {
     
     var arrayAux = []
     var verificador = false;
 
-    //Esse laço irá pagar a quantidade de variáveis e cláusulas adquirida do .cnf,
+    //Esse laço irá pegar a quantidade de variáveis e cláusulas adquirida do .cnf,
 
     for(i = 0; i < text.length && verificador == false; i++ ) {
         arrayAux =  text[i].split(' ');
@@ -71,11 +100,14 @@ exports.solve = function(fileName) {
     }
 }
 //------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------
+
 function readClauses (text) {
     var achou = false
     var position = 0
     var contador = 0
     var arrayClauses = []
+    var auxiliar = []
    
    //Nesse laço estou verificando qual linha esta o 'cnf', pois é a partir dele
    //que eu começarei a pegar as cláusulas.
@@ -97,11 +129,15 @@ function readClauses (text) {
   
   for(i = 0; i < text.length - position; i++) {
     arrayClauses[i] = text[position + i].split(' ')
+  
+    if(arrayClauses[i] != '') {
     for(j = 0; j < arrayClauses[i].length; j++) {
+        
         if(arrayClauses[i][j] != 0 && arrayClauses[i][j] != '') {
             auxiliar[contador] = arrayClauses[i][j]
             contador++
-        } else if(arrayClauses[i][j] == 0 && arrayClauses[i][j] != '')
+        } 
+        else if(arrayClauses[i][j] == 0 && arrayClauses[i][j] != '')
         { 
             contador = 0
         }
@@ -109,10 +145,13 @@ function readClauses (text) {
     if(contador == 0) {
         arrayClauses[i] = auxiliar
         auxiliar = []
-   }
+        } 
+    }
+    
+} 
+    return arrayClauses
 }
-   return arrayClauses
-}
+//------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
 
 function readVariables (clauses) {
@@ -140,5 +179,5 @@ function readVariables (clauses) {
     return arrayVariaveis
     
 }
-
-
+//-----------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------

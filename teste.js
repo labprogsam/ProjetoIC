@@ -6,54 +6,43 @@ exports.solve = function(fileName) {
 
 //----------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------  
-  function nextAssignment (currentAssignment, indice) {
-    var mode = []
-   
-   for(i = 0; i < currentAssignment.length; i++) {
-       mode[i] = 1
-    }
-    if(mode == currentAssignment) {
-       /*se mode == currentAssignment quer dizer que foi lançado o ultimo elemento
-       novamente dentro meu nextAssignment, isso quer dizer então que o Sat não
-       tem solução.*/
+  function newArrayVariable (currentAssignment, indice) {
+    
+    if(indice == 0 && currentAssignment[indice] == 1) {
         return true
     }
-
-    else if(currentAssignment[indice] == 0) 
-    {
-        currentAssignment [indice] = 1
-        return assignment
-
+    else if(currentAssignment[indice] == 0) {
+        currentAssignment[indice] = 1
+        return currentAssignment
     } else {
-        
         currentAssignment[indice] = 0
-        return nextAssignment(currentAssignment, indice - 1)
-
-        }
+        return currentAssignment[indice --]
+    }
     }
 //----------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------
+   function nextAssignment (currentAssignment) {
+    
+    var resultado = newArrayVariable(currentAssignment, currentAssignment.length -1)
+    return resultado
 
-  function doSolve(clauses, assignment) {
+   }
+//------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------
+
+function doSolve(clauses, assignment) {
     let isSat = false
-    let modeArray = [false]
-
+    var noSolver = false
     
-    while ((!isSat) && !modeArray) {
-      
+    while ((!isSat) && !assignment) {
+      // does this assignment satisfy the formula? If so, make isSat true. 
         for(i = 0; i < assignment.length; i++) {
-               
-            modeArray[i] = 1
-            //Esse modeArray será o meu array modelo, por exemplo [1,1,1,...1], que é a ultima tentativa.
-               
-            }
-      }
+            
+        }
 
-            if(assignment != modeArray){
-            assignment = nextAssignment(assignment, assignment.length -1)
-            return doSolve(clauses,assignment)
-      }
-    
+      // if not, get the next assignment and try again. 
+      assignment = nextAssignment(assignment)
+    }
     let result = {'isSat': isSat, satisfyingAssignment: null}
     if (isSat) {
       result.satisfyingAssignment = assignment
