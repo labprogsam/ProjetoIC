@@ -1,5 +1,13 @@
-exports.solve = function(fileName) {
-    let formula = propsat.readFormula(fileName)
+
+var re = teste("hole1.cnf")
+console.log(re.isSat);
+console.log(re.satisfyingAssignment);
+
+/*exports.solve = */function teste(fileName) {
+    //console.log(fileName)
+    let formula = /*propsat.*/readFormula(fileName)
+    //console.log(formula.clauses)
+    //console.log(formula.variables)
     let result = doSolve(formula.clauses, formula.variables)
     return result // two fields: isSat and satisfyingAssignment
   }
@@ -8,11 +16,11 @@ exports.solve = function(fileName) {
 //------------------------------------------------------------------------------------------------------------------------
 function newArrayVariable (currentAssignment, indice) {
     
-    if(currentAssignment[indice] == 0) {
-        currentAssignment[indice] = 1
+    if(currentAssignment[indice] == false) {
+        currentAssignment[indice] = true
         return currentAssignment
     } else {
-        currentAssignment[indice] = 0
+        currentAssignment[indice] = true
         return currentAssignment[indice --]
     }
     }
@@ -33,20 +41,21 @@ function doSolve(clauses, assignment) {
     var clausulasOk = 0
     var entrou = false
 
-    while ((!isSat) && end == false ) {
+    while ((!isSat) && !end ) {
         end = true
 
     for(j = 0; j < clauses.length; j++) {
-       
+       console.log("o argumento é: " + assignment)
         if(!entrou) {
             var currentClauses = clauses[j]
+            console.log("clausula : " + currentClauses)
             entrou = true
          }
  
          for(i = 0; i < currentClauses.length && entrou; i ++) {
              var currentVariable = currentClauses[i]
- 
-             if(currentVariable < 0) {  //Implica que ela é falsa
+             
+            if(currentVariable < 0) {  //Implica que ela é falsa
                  currentVariable = Math.abs(currentVariable) - 1  //Pego o local onda ela está
                  
                  if(assignment[currentVariable] == false) {
@@ -54,23 +63,23 @@ function doSolve(clauses, assignment) {
                      clausulasOk += 1
                     } 
               } 
-             else {  //Implica que ela maior que zero.
+               else {  //Implica que ela maior que zero.
                  currentVariable -= 1
                   
                   if(assignment[currentVariable] == true) {
                       entrou = false
                       clausulasOk += 1
                   }
-              }
+                }
              }
     }  
-        
-        
-        
-    
-      
+        console.log("tamanho " + clausulasOk)
+        if(clausulasOk == clauses.length) {
+            isSat = true
+        }
 
-
+        clausulasOk = 0
+        
       //verifica se é a ultima solução possível:
       for(i = 0; i < assignment.length && end; i ++) {
             if(assignment[i] == 0) {
@@ -92,10 +101,11 @@ function doSolve(clauses, assignment) {
 //------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
    function readFormula(fileName) {
-    let text = readText()
+    let text = readText(fileName)
     let clauses = readClauses(text)
+    //console.log(clauses)
     let variables = readVariables(clauses)
-    
+    console.log(variables)
     let specOk = checkProblemSpecification(text, clauses, variables)
   
     let result = { 'clauses': [], 'variables': [] }
@@ -108,10 +118,9 @@ function doSolve(clauses, assignment) {
 //-----------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------
 
-function readText () {
+function readText (fileName) {
     var fs = require('fs');
-    var leitura = fs.readFileSync('hole1.cnf').toString()
-    var linhas = [];
+    var leitura = fs.readFileSync(fileName).toString()
     var linhas = leitura.split('\r\n');
 
 return linhas
@@ -201,7 +210,7 @@ function readClauses (text) {
 function readVariables (clauses) {
     var qntNum = 0
     var totalCriar = 0
-    
+    var arrayVariaveis = []
     var arrayOrganizado = []
     var concatenacaoArrays = []
     
@@ -209,17 +218,25 @@ function readVariables (clauses) {
     for(i = 0; i < clauses.length; i++) {
         concatenacaoArrays = concatenacaoArrays.concat(clauses[i])
     }
+    
     //Apos sair do laço, terei todos os elementos das clausulas em um só array,
     //a proxima linha irá organizar esse novo array em ordem crescente.
-    arrayOrganizado = concatenacaoArrays.sort();
+   
+    for(i = 0; i < concatenacaoArrays.length; i ++) {
+        arrayOrganizado[i] = Math.abs(concatenacaoArrays[i])
+    }
 
+    arrayOrganizado = arrayOrganizado.sort()
+    
     //Apos organizado eu pego ultimo (Que é o maior) elemento do arrayOrganizado.
-    qntNum = arrayOrganizado[arrayOrganizado.length -1]
-    totalCriar = Math.abs(qntNum) 
+    
+    totalCriar = arrayOrganizado[arrayOrganizado.length - 1]
 
     for(i = 0; i < totalCriar; i++) {
         arrayVariaveis[i] = false
     }
+    console.log(totalCriar)
+
     return arrayVariaveis
     
 }
