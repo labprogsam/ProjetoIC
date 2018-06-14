@@ -29,27 +29,60 @@ function newArrayVariable (currentAssignment, indice) {
 
 function doSolve(clauses, assignment) {
     let isSat = false
+    var end = false
+    var clausulasOk = 0
+    var entrou = false
 
+    while ((!isSat) && end == false ) {
+        end = true
+
+    for(j = 0; j < clauses.length; j++) {
+       
+        if(!entrou) {
+            var currentClauses = clauses[j]
+            entrou = true
+         }
+ 
+         for(i = 0; i < currentClauses.length && entrou; i ++) {
+             var currentVariable = currentClauses[i]
+ 
+             if(currentVariable < 0) {  //Implica que ela é falsa
+                 currentVariable = Math.abs(currentVariable) - 1  //Pego o local onda ela está
+                 
+                 if(assignment[currentVariable] == false) {
+                     entrou = false   //Agr ele ira para proxima clausula pq essa está na condição
+                     clausulasOk += 1
+                    } 
+              } 
+             else {  //Implica que ela maior que zero.
+                 currentVariable -= 1
+                  
+                  if(assignment[currentVariable] == true) {
+                      entrou = false
+                      clausulasOk += 1
+                  }
+              }
+             }
+    }  
+        
+        
+        
     
-    while ((!isSat) && ) {
-      // does this assignment satisfy the formula? If so, make isSat true. 
-        for(i = 0; i < clauses.length; i++) {
-            var positionVar = clauses.length[i]
+      
 
-            if(positionVar < 0) {
-                positionVar = Math.abs(positionVar) - 1
-                if(assignment[positionVar] == false) {
-                    
-                }
+
+      //verifica se é a ultima solução possível:
+      for(i = 0; i < assignment.length && end; i ++) {
+            if(assignment[i] == 0) {
+                end = false
             }
-
         }
-
-      // if not, get the next assignment and try again. 
-      assignment = nextAssignment(assignment)
+      if(end == false) {
+          assignment = nextAssignment(assignment)
+      }
+      
     }
 
-    
     let result = {'isSat': isSat, satisfyingAssignment: null}
     if (isSat) {
       result.satisfyingAssignment = assignment
