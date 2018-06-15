@@ -6,7 +6,7 @@ console.log(re.satisfyingAssignment);
     let formula = /*propsat.*/readFormula(fileName)
     let result = doSolve(formula.clauses, formula.variables)
     
-    return result // two fields: isSat and satisfyingAssignment
+    return result 
   }
 //------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ function newArrayVariable (currentAssignment, indice) {
    function nextAssignment (currentAssignment) {
     
     var resultado = newArrayVariable(currentAssignment, currentAssignment.length -1)
-   
+    
     return resultado
    }
 //------------------------------------------------------------------------------------------------------------------------
@@ -39,6 +39,7 @@ function doSolve(clauses, assignment) {
     var end = false
     var clausulasOk = 0
     var entrou = false
+    
 
     while ((!isSat) && !end ) {
         end = true
@@ -105,8 +106,11 @@ function doSolve(clauses, assignment) {
 //------------------------------------------------------------------------------------------------------------------------
    function readFormula(fileName) {
     let text = readText(fileName)
+ 
     let clauses = readClauses(text)
+    
     let variables = readVariables(clauses)
+   
     let specOk = checkProblemSpecification(text, clauses, variables)
     let result = { 'clauses': [], 'variables': [] }
     
