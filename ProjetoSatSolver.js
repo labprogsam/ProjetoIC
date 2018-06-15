@@ -1,4 +1,3 @@
-
 var re = teste("hole1.cnf")
 console.log(re.isSat);
 console.log(re.satisfyingAssignment);
@@ -20,8 +19,8 @@ function newArrayVariable (currentAssignment, indice) {
         currentAssignment[indice] = true
         return currentAssignment
     } else {
-        currentAssignment[indice] = true
-        return currentAssignment[indice --]
+        currentAssignment[indice] = false
+        return newArrayVariable(currentAssignment, indice - 1)
     }
     }
 //----------------------------------------------------------------------------------------------------------------------
@@ -45,10 +44,8 @@ function doSolve(clauses, assignment) {
         end = true
 
     for(j = 0; j < clauses.length; j++) {
-       console.log("o argumento é: " + assignment)
         if(!entrou) {
             var currentClauses = clauses[j]
-            console.log("clausula : " + currentClauses)
             entrou = true
          }
  
@@ -59,21 +56,21 @@ function doSolve(clauses, assignment) {
                  currentVariable = Math.abs(currentVariable) - 1  //Pego o local onda ela está
                  
                  if(assignment[currentVariable] == false) {
-                     entrou = false   //Agr ele ira para proxima clausula pq essa está na condição
-                     clausulasOk += 1
+                    
+                    entrou = false   //Agr ele ira para proxima clausula pq essa está na condição
+                    clausulasOk += 1
                     } 
               } 
-               else {  //Implica que ela maior que zero.
-                 currentVariable -= 1
-                  
-                  if(assignment[currentVariable] == true) {
-                      entrou = false
-                      clausulasOk += 1
+               else  {  //Implica que ela maior que zero.            
+               currentVariable -= 1
+                
+                  if(assignment[currentVariable] == true) { 
+                    entrou = false
+                    clausulasOk += 1
                   }
                 }
              }
     }  
-        console.log("tamanho " + clausulasOk)
         if(clausulasOk == clauses.length) {
             isSat = true
         }
@@ -82,10 +79,11 @@ function doSolve(clauses, assignment) {
         
       //verifica se é a ultima solução possível:
       for(i = 0; i < assignment.length && end; i ++) {
-            if(assignment[i] == 0) {
+            if(assignment[i] == false) {
                 end = false
             }
         }
+    
       if(end == false) {
           assignment = nextAssignment(assignment)
       }
@@ -103,9 +101,7 @@ function doSolve(clauses, assignment) {
    function readFormula(fileName) {
     let text = readText(fileName)
     let clauses = readClauses(text)
-    //console.log(clauses)
     let variables = readVariables(clauses)
-    console.log(variables)
     let specOk = checkProblemSpecification(text, clauses, variables)
   
     let result = { 'clauses': [], 'variables': [] }
@@ -208,7 +204,7 @@ function readClauses (text) {
 //------------------------------------------------------------------------------------------------------------------------
 
 function readVariables (clauses) {
-    var qntNum = 0
+
     var totalCriar = 0
     var arrayVariaveis = []
     var arrayOrganizado = []
@@ -235,7 +231,6 @@ function readVariables (clauses) {
     for(i = 0; i < totalCriar; i++) {
         arrayVariaveis[i] = false
     }
-    console.log(totalCriar)
 
     return arrayVariaveis
     
