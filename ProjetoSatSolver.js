@@ -37,7 +37,7 @@ function newArrayVariable (currentAssignment, indice) {
 function doSolve(clauses, assignment) {
     let isSat = false
     var end = false
-    var clausesOk = 0
+    var clausulasOk = 0
     var inClause = false
     
 
@@ -45,40 +45,36 @@ function doSolve(clauses, assignment) {
         end = true
        
     for(j = 0; j < clauses.length; j++) {
-         
-        //Pegarei a minha clausula j dentro todas as existentes e ve se ela é satisfeita:
+          
          var currentClauses = clauses[j]
          inClause = true 
          
+          
             for(i = 0; i < currentClauses.length && inClause; i ++) {
-                //Pegarei a minha variável i da clausula j escolhida a cima:
-                var currentVariable = currentClauses[i]
-            
-            //Se a variavel entrar nesse if é pq ele é false:
-            if(currentVariable < 0 ) {  
-                 currentVariable = Math.abs(currentVariable) - 1  //<--Pego o local onda ela está
+             var currentVariable = currentClauses[i]
+             
+            if(currentVariable < 0 ) {  //Implica que ela é falsa
+                 currentVariable = Math.abs(currentVariable) - 1  //Pego o local onda ela está
                
                  if(assignment[currentVariable] == false) {
-                    //Apos entrar no if sei q a clausula foi satisfeita e testo a próxima.
-                    inClause = false   
-                    //O clausulaOk serve para saber quantas clausulas foram satisfeita no final.        
-                    clausesOk += 1
+                    inClause = false   //Zero o entrou pois se ele entrou nesse if é pq a clausula foi satisfeita e ele pode ir próximo
+                                    
+                    clausulasOk += 1
                     } 
               } 
-               //Se entrou no else quer dizer que ele é positivo;
+               //Se entrou no else quer dizer que ele é positivo -> terá q ser true.
                else  {  
                currentVariable -= 1         
                    
                   if(assignment[currentVariable] == true) { 
-                    //Análoga a citada a cima.
                     inClause = false
-                    clausesOk += 1
+                    clausulasOk += 1
                   }
                 }
              }
     }   
         //Verifica se é satisfatível.
-        if(clausesOk == clauses.length) {
+        if(clausulasOk == clauses.length) {
             isSat = true
         }
         
@@ -94,8 +90,8 @@ function doSolve(clauses, assignment) {
       if(end == false && !isSat) {       
           assignment = nextAssignment(assignment)
       }
-      //Reseto as clausesOk pois testarei o proximo assignment caso necessário.
-      clausesOk = 0
+
+      clausulasOk = 0
       inClause = false
 
     } //Fim do while
@@ -109,12 +105,13 @@ function doSolve(clauses, assignment) {
 //------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
    function readFormula(fileName) {
-    
     let text = readText(fileName)
+ 
     let clauses = readClauses(text)
-    let variables = readVariables(clauses)
-    let specOk = checkProblemSpecification(text, clauses, variables)
     
+    let variables = readVariables(clauses)
+   
+    let specOk = checkProblemSpecification(text, clauses, variables)
     let result = { 'clauses': [], 'variables': [] }
     
     if (specOk) {
@@ -126,6 +123,7 @@ function doSolve(clauses, assignment) {
   }
 //-----------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------
+
 function readText (fileName) {
     var fs = require('fs');
     var leitura = fs.readFileSync(fileName).toString()
@@ -154,8 +152,7 @@ return linhas
     }
     
     //Apos sair do laço eu verifico se realmente a quantidade de cláusulas e de variáveis
-    //é igual a quantidade de cláusulas e variáveis colocadas.
-    
+    //é igual a quantidade de cláusulas e variáveis informada.
     if(qntClausulas == clauses.length && qntVariaveis == variables.length) {
         return true
     } else {
@@ -164,6 +161,7 @@ return linhas
 }
 //------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
+
 function readClauses (text) {
     var achou = false
     var position = 0
@@ -171,8 +169,8 @@ function readClauses (text) {
     var arrayClauses = []
     var auxiliar = []
    
-   /*Nesse laço estou verificando qual linha esta o 'cnf', pois é a partir dele
-   que eu começarei a pegar as cláusulas.*/
+   //Nesse laço estou verificando qual linha esta o 'cnf', pois é a partir dele
+   //que eu começarei a pegar as cláusulas.
     while (contador < text.length && achou == false) {
         arrayAux = text[contador].split(' ')
         
@@ -184,16 +182,14 @@ function readClauses (text) {
     }
         contador++
     }
-    contador = 0
-    
-    //Apos sair do laço eu terei a linha a qual está está o 'cnf', e pegarei
-    //todos as linhas depois dessa.
-  
 
-  /* No proximo for eu irei pegar somente as minhas clausulas e armazenar em "ArrayClauses"*/
+    //Apos sair do laço eu terei a linha a qual está está o 'cnf', e pegarei
+  //todos as linhas depois dessa.
+  contador = 0
+  
   for(i = 0; i < text.length - position; i++) {
     arrayClauses[i] = text[position + i].split(' ')
-    
+  
     if(arrayClauses[i] != '') {
     for(j = 0; j < arrayClauses[i].length; j++) {
         
@@ -201,7 +197,8 @@ function readClauses (text) {
             auxiliar[contador] = arrayClauses[i][j] 
             contador++
         } 
-        else if(arrayClauses[i][j] == 0 && arrayClauses[i][j] != '') { 
+        else if(arrayClauses[i][j] == 0 && arrayClauses[i][j] != '')
+        { 
             contador = 0
         }
     }
@@ -224,7 +221,6 @@ function readVariables (clauses) {
     var concatenacaoArrays = []
     
     //Aqui concatenarei todas as clausulas em um só array.
-
     for(i = 0; i < clauses.length; i++) {
         concatenacaoArrays = concatenacaoArrays.concat(clauses[i])
     }
@@ -233,6 +229,7 @@ function readVariables (clauses) {
     //a proxima linha irá organizar esse novo array em ordem crescente.
    
     for(i = 0; i < concatenacaoArrays.length; i ++) {
+        
         arrayOrganizado[i] = parseInt((concatenacaoArrays[i]))
         arrayOrganizado[i] = Math.abs(arrayOrganizado[i])
     }
@@ -251,12 +248,15 @@ function readVariables (clauses) {
       }
 
     //Apos organizado eu pego ultimo (Que é o maior) elemento do arrayOrganizado.
+    
     totalCriar = arrayOrganizado[arrayOrganizado.length - 1]
     
     for(i = 0; i < totalCriar; i++) {
         arrayVariaveis[i] = false
     }
+
     return arrayVariaveis
+    
 }
 //-----------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------
