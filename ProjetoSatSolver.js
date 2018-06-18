@@ -42,10 +42,21 @@ function doSolve(clauses, assignment) {
     
 
     while ((!isSat) && !end ) {
-        end = true
+
        
-    for(j = 0; j < clauses.length; j++) {
+    for(j = 0; j < clauses.length; j++) { 
           
+        if(inClause == true ) {
+            end = fim(assignment)
+
+            if(!end) {
+                assignment = nextAssignment(assignment)
+                j = 0
+                clausesOk = 0
+            
+            }
+        }
+    
          var currentClauses = clauses[j]
          inClause = true 
          
@@ -71,28 +82,16 @@ function doSolve(clauses, assignment) {
                     clausesOk += 1
                   }
                 }
-             }
+             } 
     }   
         //Verifica se é satisfatível.
         if(clausesOk == clauses.length) {
             isSat = true
         }
-        
 
-      //verifica se é a ultima solução possível:
-      for(i = 0; i < assignment.length && end; i ++) {
-            if(assignment[i] == false) {
-                end = false
-            }
-        }
 
-      //Verifica se eu já encontrei a solução ou se eu já estou na ultima solução.
-      if(end == false && !isSat) {       
-          assignment = nextAssignment(assignment)
-      }
-
-      clausesOk = 0
-      inClause = false
+     /* clausesOk = 0
+      inClause = false*/
 
     } //Fim do while
 
@@ -108,7 +107,6 @@ function doSolve(clauses, assignment) {
     let text = readText(fileName)
  
     let clauses = readClauses(text)
-    
     let variables = readVariables(clauses)
    
     let specOk = checkProblemSpecification(text, clauses, variables)
@@ -257,6 +255,17 @@ function readVariables (clauses) {
 
     return arrayVariaveis
     
+}
+//-----------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------
+
+function fim(assignment) {
+    for(i = 0; i < assignment.length; i++) {
+        if(assignment[i] == false) {
+            return false
+        } 
+    }
+    return true 
 }
 //-----------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------

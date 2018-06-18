@@ -48,13 +48,15 @@ function doSolve(clauses, assignment) {
           
         if(inClause == true ) {
             end = fim(assignment)
+
             if(!end) {
                 assignment = nextAssignment(assignment)
                 j = 0
                 clausesOk = 0
+            
             }
         }
-         console.log(assignment)
+    
          var currentClauses = clauses[j]
          inClause = true 
          
@@ -88,8 +90,8 @@ function doSolve(clauses, assignment) {
         }
 
 
-      clausesOk = 0
-      inClause = false
+     /* clausesOk = 0
+      inClause = false*/
 
     } //Fim do while
 
@@ -259,9 +261,11 @@ function readVariables (clauses) {
 
 function fim(assignment) {
     for(i = 0; i < assignment.length; i++) {
-        if(assignment[i] == 0) {
+        if(assignment[i] == false) {
             return false
         } 
     }
     return true 
 }
+//-----------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------
