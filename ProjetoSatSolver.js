@@ -37,7 +37,7 @@ function newArrayVariable (currentAssignment, indice) {
 function doSolve(clauses, assignment) {
     let isSat = false
     var end = false
-    var clausulasOk = 0
+    var clausesOk = 0
     var inClause = false
     
 
@@ -59,7 +59,7 @@ function doSolve(clauses, assignment) {
                  if(assignment[currentVariable] == false) {
                     inClause = false   //Zero o entrou pois se ele entrou nesse if é pq a clausula foi satisfeita e ele pode ir próximo
                                     
-                    clausulasOk += 1
+                    clausesOk += 1
                     } 
               } 
                //Se entrou no else quer dizer que ele é positivo -> terá q ser true.
@@ -68,13 +68,13 @@ function doSolve(clauses, assignment) {
                    
                   if(assignment[currentVariable] == true) { 
                     inClause = false
-                    clausulasOk += 1
+                    clausesOk += 1
                   }
                 }
              }
     }   
         //Verifica se é satisfatível.
-        if(clausulasOk == clauses.length) {
+        if(clausesOk == clauses.length) {
             isSat = true
         }
         
@@ -91,7 +91,7 @@ function doSolve(clauses, assignment) {
           assignment = nextAssignment(assignment)
       }
 
-      clausulasOk = 0
+      clausesOk = 0
       inClause = false
 
     } //Fim do while

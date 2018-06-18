@@ -37,29 +37,38 @@ function newArrayVariable (currentAssignment, indice) {
 function doSolve(clauses, assignment) {
     let isSat = false
     var end = false
-    var clausulasOk = 0
-    var entrou = false
+    var clausesOk = 0
+    var inClause = false
     
 
     while ((!isSat) && !end ) {
-        end = true
+
        
-    for(j = 0; j < clauses.length; j++) {
+    for(j = 0; j < clauses.length; j++) { 
           
+        if(inClause == true ) {
+            end = fim(assignment)
+            if(!end) {
+                assignment = nextAssignment(assignment)
+                j = 0
+                clausesOk = 0
+            }
+        }
+         console.log(assignment)
          var currentClauses = clauses[j]
-         entrou = true 
+         inClause = true 
          
           
-            for(i = 0; i < currentClauses.length && entrou; i ++) {
+            for(i = 0; i < currentClauses.length && inClause; i ++) {
              var currentVariable = currentClauses[i]
              
             if(currentVariable < 0 ) {  //Implica que ela é falsa
                  currentVariable = Math.abs(currentVariable) - 1  //Pego o local onda ela está
                
                  if(assignment[currentVariable] == false) {
-                    entrou = false   //Zero o entrou pois se ele entrou nesse if é pq a clausula foi satisfeita e ele pode ir próximo
+                    inClause = false   //Zero o entrou pois se ele entrou nesse if é pq a clausula foi satisfeita e ele pode ir próximo
                                     
-                    clausulasOk += 1
+                    clausesOk += 1
                     } 
               } 
                //Se entrou no else quer dizer que ele é positivo -> terá q ser true.
@@ -67,32 +76,20 @@ function doSolve(clauses, assignment) {
                currentVariable -= 1         
                    
                   if(assignment[currentVariable] == true) { 
-                    entrou = false
-                    clausulasOk += 1
+                    inClause = false
+                    clausesOk += 1
                   }
                 }
-             }
+             } 
     }   
         //Verifica se é satisfatível.
-        if(clausulasOk == clauses.length) {
+        if(clausesOk == clauses.length) {
             isSat = true
         }
-        
 
-      //verifica se é a ultima solução possível:
-      for(i = 0; i < assignment.length && end; i ++) {
-            if(assignment[i] == false) {
-                end = false
-            }
-        }
 
-      //Verifica se eu já encontrei a solução ou se eu já estou na ultima solução.
-      if(end == false && !isSat) {       
-          assignment = nextAssignment(assignment)
-      }
-
-      clausulasOk = 0
-      entrou = false
+      clausesOk = 0
+      inClause = false
 
     } //Fim do while
 
@@ -108,7 +105,6 @@ function doSolve(clauses, assignment) {
     let text = readText(fileName)
  
     let clauses = readClauses(text)
-    
     let variables = readVariables(clauses)
    
     let specOk = checkProblemSpecification(text, clauses, variables)
@@ -261,3 +257,11 @@ function readVariables (clauses) {
 //-----------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------
 
+function fim(assignment) {
+    for(i = 0; i < assignment.length; i++) {
+        if(assignment[i] == 0) {
+            return false
+        } 
+    }
+    return true 
+}
